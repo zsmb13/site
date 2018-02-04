@@ -1,0 +1,142 @@
+def rootPckg = rootPackage.replace('.', '/')
+
+compileKotlin2Js {
+    kotlinOptions {
+        sourceMap = true
+        sourceMapEmbedSources = "always"
+        outputFile = "${buildDir}/app.js"
+        suppressWarnings = true
+        verbose = true
+        moduleKind = "umd"
+    }
+}
+
+clean.doFirst {
+    delete webDir
+}
+
+jar.enabled = false
+
+build.doLast {
+
+    // copies app.js into webdir
+    if (dceEnabled) {
+        copy {
+            from "$buildDir/kotlin-js-min/main/app.js"
+            from "$buildDir/kotlin-js-min/main/app.js.map"
+            into "${webDir}"
+        }
+        copy {
+            from("$buildDir/kotlin-js-min/main/") {
+                include "*.js"
+                include "*.js.map"
+                exclude "app.js"
+                exclude "app.js.map"
+            }
+            into "$webDir/js"
+        }
+    } else {
+        copy {
+            from(buildDir) {
+                include "*.js"
+                include "*.js.map"
+            }
+            into webDir
+        }
+    }
+
+    // copies own .html and .css files into webdir
+    copy {
+        includeEmptyDirs = false
+
+        println("looking for html under " + "$projectDir/src/main/kotlin/$rootPckg")
+
+        from("$projectDir/src/main/kotlin/$rootPckg/") {
+            include '**/*.html'
+            include '**/*.css'
+            exclude '*.css'
+        }
+        into "$webDir"
+    }
+
+    // copies own top level .css files into webdir/css
+    copy {
+        from("$projectDir/src/main/kotlin/$rootPckg") {
+            include "*.css"
+        }
+        into "$webDir/css"
+    }
+
+    // copies own js dependencies into webdir/js
+    copy {
+        includeEmptyDirs = false
+
+        from("$projectDir/src/main/js") {
+            include '**/*.js'
+            include '**/*.js.map'
+        }
+        from("$projectDir/lib") {
+            include '**/*.js'
+            include '**/*.js.map'
+        }
+        into "$webDir/js"
+    }
+
+    // process dependencies
+    configurations.compile.each { File file ->
+
+        def isModule = false
+        zipTree(file.absolutePath).visit { FileVisitDetails details ->
+            if (details.file.name == "module-marker") {
+                isModule = true
+            }
+        }
+
+        if (isModule) {
+            // copy module contents (js, html, css) to webdir/components
+            copy {
+                includeEmptyDirs = false
+
+                from(zipTree(file.absolutePath)) {
+                    if (!dceEnabled) {
+                        include '**/*.js'
+                        include '**/*.js.map'
+                    }
+                    include '**/*.html'
+                    include '**/*.css'
+                    exclude '*.css'
+                }
+                into "$webDir/components"
+            }
+            // copy top level module css to webdir/css
+            copy {
+                from(zipTree(file.absolutePath)) {
+                    include "*.css"
+                }
+                into "$webDir/css"
+            }
+        } else {
+            // copy any non-module dependency's contents (js) to webdir/js
+            println file.name
+            copy {
+                includeEmptyDirs = false
+
+                if (!dceEnabled) {
+                    from(zipTree(file.absolutePath)) {
+                        include '*.js'
+                        include '*.js.map'
+                    }
+                } else {
+                    from("$buildDir/min") {
+                        include '*.js'
+                        include '*.js.map'
+                        exclude 'app.js'
+                        exclude 'app.js.map'
+                    }
+                }
+
+                into "$webDir/js"
+            }
+        }
+    }
+}

@@ -1,6 +1,10 @@
 buildscript {
-    ext.kotlin_version = '1.2.21'
+    ext {
+        koinjs_version = '0.1.3'
+        kagu_version = '0.2.1'
 
+        webDir = "${rootDir}/web"
+    }
     repositories {
         mavenCentral()
     }
@@ -9,8 +13,10 @@ buildscript {
     }
 }
 apply plugin: 'kotlin-platform-js'
+apply plugin: 'kotlin-dce-js'
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 
@@ -18,4 +24,12 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     expectedBy project(":site-common")
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+
+    compile "co.zsmb:koinjs:$koinjs_version"
+    compile "co.zsmb:kagu:$kagu_version"
 }
+
+ext.rootPackage = "co.zsmb.site.frontend"
+ext.dceEnabled = true
+
+apply from: "helper.gradle"
