@@ -1,2 +1,5 @@
 rootProject.name = 'site'
 
+include 'site-backend'
+include 'site-frontend'
+include 'site-common'
