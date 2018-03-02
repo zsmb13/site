@@ -1,0 +1,11 @@
+language: java
+jdk: oraclejdk8
+
+script:
+- ./gradlew clean
+- ./gradlew site-backend:build
+
+notifications:
+  email:
+    on_failure: always
+    on_success: never
