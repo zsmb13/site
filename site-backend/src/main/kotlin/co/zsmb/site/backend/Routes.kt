@@ -2,8 +2,7 @@ package co.zsmb.site.backend
 
 import org.springframework.context.support.beans
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
-import org.springframework.web.reactive.function.server.ServerResponse.created
-import org.springframework.web.reactive.function.server.ServerResponse.ok
+import org.springframework.web.reactive.function.server.ServerResponse.*
 import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.bodyToMono
 import org.springframework.web.reactive.function.server.router
@@ -33,6 +32,11 @@ private fun RouterFunctionDsl.addArticleRoutes(articleRepository: ArticleReposit
         }
         GET("/") {
             ok().body(articleRepository.findAll())
+        }
+        GET("/{articleId}") {
+            articleRepository.findById(it.pathVariable("articleId"))
+                    .flatMap { ok().syncBody(it) }
+                    .switchIfEmpty(notFound().build())
         }
     }
 }

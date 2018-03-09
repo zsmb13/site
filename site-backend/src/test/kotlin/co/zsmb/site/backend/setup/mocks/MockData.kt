@@ -6,6 +6,8 @@ object MockData {
 
     const val ID = "afoin33th83t3gge"
 
+    const val NON_EXISTENT_ID = "asnfjhn3khr8732bg3in97enfb32"
+
     val ARTICLES = listOf(
             Article(title = "First", content = "First content", id = "abc123"),
             Article(title = "Second", content = "Second content", id = "def456"),

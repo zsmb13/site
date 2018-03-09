@@ -22,7 +22,29 @@ class ArticleTests(@Autowired routerFunction: RouterFunction<ServerResponse>) {
                 .uri("/articles")
                 .exchange()
                 .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBodyAs<List<Article>>().isEqual(MockData.ARTICLES)
+    }
+
+    @Test
+    fun `Get article by id`() {
+        val article = MockData.ARTICLES[1]
+
+        client.get()
+                .uri("/articles/${article.id}")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyAs<Article>().isEqual(article)
+    }
+
+    @Test
+    fun `Get article with invalid id`() {
+        client.get()
+                .uri("/articles/${MockData.NON_EXISTENT_ID}")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody().isEmpty()
     }
 
     @Test
