@@ -6,18 +6,18 @@ import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.server.RouterFunction
-import org.springframework.web.reactive.function.server.ServerResponse
 
 @SpringTest
-class ArticleTests(@Autowired routerFunction: RouterFunction<ServerResponse>) {
+class ArticleTests(@Autowired context: ApplicationContext) {
 
-    private val client = WebTestClient.bindToRouterFunction(routerFunction).build()
+    private val client = WebTestClient.bindToApplicationContext(context).build()
 
     @Test
-    fun `Get all articles`() {
+    fun `Get all article`() {
         client.get()
                 .uri("/articles")
                 .exchange()
@@ -48,7 +48,20 @@ class ArticleTests(@Autowired routerFunction: RouterFunction<ServerResponse>) {
     }
 
     @Test
-    fun `Create new article`() {
+    fun `Create new article without auth`() {
+        val article = Article(title = "my title", content = "some content")
+        val modifiedArticle = article.copy(id = MockData.ID)
+        client.post()
+                .uri("/articles")
+                .syncBody(article)
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody().isEmpty()
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Create new article as ADMIN`() {
         val article = Article(title = "my title", content = "some content")
         val modifiedArticle = article.copy(id = MockData.ID)
         client.post()

@@ -1,5 +1,6 @@
 package co.zsmb.site.backend
 
+import co.zsmb.site.backend.beans.beans
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.data.annotation.Id
