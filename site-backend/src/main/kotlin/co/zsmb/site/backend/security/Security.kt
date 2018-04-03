@@ -23,6 +23,7 @@ internal fun BeanDefinitionDsl.securityBeans() {
                 .csrf().disable()
                 .authorizeExchange()
                 .addArticlePaths()
+                .addUserPaths()
                 .addMiscPaths()
                 .anyExchange().authenticated()
                 .and().httpBasic()
@@ -33,6 +34,10 @@ internal fun BeanDefinitionDsl.securityBeans() {
 private fun ServerHttpSecurity.AuthorizeExchangeSpec.addArticlePaths() = this
         .pathMatchers(HttpMethod.GET, "/articles/**").permitAll()
         .pathMatchers(HttpMethod.POST, "/articles/**").hasRole("ADMIN")
+
+private fun ServerHttpSecurity.AuthorizeExchangeSpec.addUserPaths() = this
+        .pathMatchers(HttpMethod.GET, "/users/**").hasRole("ADMIN")
+        .pathMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
 
 private fun ServerHttpSecurity.AuthorizeExchangeSpec.addMiscPaths() = this
         .pathMatchers(HttpMethod.GET, "/").hasRole("ADMIN")

@@ -1,7 +1,7 @@
 package co.zsmb.site.backend
 
 import co.zsmb.site.backend.extensions.expectBodyAs
-import co.zsmb.site.backend.extensions.isEqual
+import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
 import org.junit.jupiter.api.Test
@@ -23,7 +23,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyAs<List<Article>>().isEqual(MockData.ARTICLES)
+                .expectBodyAs<List<Article>>().isEqualWith(MockData.ARTICLES)
     }
 
     @Test
@@ -35,7 +35,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyAs<Article>().isEqual(article)
+                .expectBodyAs<Article>().isEqualWith(article)
     }
 
     @Test
@@ -71,7 +71,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectHeader().valueEquals("location", "/articles/${MockData.ID}")
-                .expectBodyAs<Article>().isEqual(modifiedArticle)
+                .expectBodyAs<Article>().isEqualWith(modifiedArticle)
     }
 
 }

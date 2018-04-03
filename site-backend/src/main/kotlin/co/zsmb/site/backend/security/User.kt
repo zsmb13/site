@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UserDetails
+import java.util.*
 
 @Document(collection = "users")
 data class User(var name: String? = null,
@@ -44,6 +45,30 @@ data class User(var name: String? = null,
     @JsonIgnore
     override fun isEnabled(): Boolean {
         return active
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as User
+
+        if (name != other.name) return false
+        if (pass != other.pass) return false
+        if (active != other.active) return false
+        if (!Arrays.equals(roles, other.roles)) return false
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name?.hashCode() ?: 0
+        result = 31 * result + (pass?.hashCode() ?: 0)
+        result = 31 * result + active.hashCode()
+        result = 31 * result + Arrays.hashCode(roles)
+        result = 31 * result + (id?.hashCode() ?: 0)
+        return result
     }
 
 }

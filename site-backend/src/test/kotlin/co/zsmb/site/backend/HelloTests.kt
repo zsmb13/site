@@ -8,7 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringTest
-class HelloTest(@Autowired context: ApplicationContext) {
+class HelloTests(@Autowired context: ApplicationContext) {
 
     val client: WebTestClient = WebTestClient
             .bindToApplicationContext(context)
