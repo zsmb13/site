@@ -62,13 +62,6 @@ data class User(var name: String? = null,
         return true
     }
 
-    override fun hashCode(): Int {
-        var result = name?.hashCode() ?: 0
-        result = 31 * result + (pass?.hashCode() ?: 0)
-        result = 31 * result + active.hashCode()
-        result = 31 * result + Arrays.hashCode(roles)
-        result = 31 * result + (id?.hashCode() ?: 0)
-        return result
-    }
+    override fun hashCode() = id?.hashCode() ?: 0
 
 }

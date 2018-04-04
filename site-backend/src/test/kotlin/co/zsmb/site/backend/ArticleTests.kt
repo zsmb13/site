@@ -18,7 +18,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     private val client = WebTestClient.bindToApplicationContext(context).build()
 
     @Test
-    fun `Get all article`() {
+    fun `Get all articles`() {
         client.get()
                 .uri("/articles")
                 .exchange()
@@ -51,13 +51,22 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @Test
     fun `Create new article without auth`() {
         val article = Article(title = "my title", content = "some content")
-        val modifiedArticle = article.copy(id = MockData.ID)
         client.post()
                 .uri("/articles")
                 .syncBody(article)
                 .exchange()
                 .expectStatus().isUnauthorized()
-                .expectBody().isEmpty()
+    }
+
+    @Test
+    @WithMockUser(roles = ["USER"])
+    fun `Create new article as USER`() {
+        val article = Article(title = "my title", content = "some content")
+        client.post()
+                .uri("/articles")
+                .syncBody(article)
+                .exchange()
+                .expectStatus().isForbidden()
     }
 
     @Test

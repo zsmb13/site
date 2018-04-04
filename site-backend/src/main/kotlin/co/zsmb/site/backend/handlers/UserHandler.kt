@@ -1,5 +1,6 @@
 package co.zsmb.site.backend.handlers
 
+import co.zsmb.site.backend.handlers.util.withBoom
 import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.security.UserRepository
 import org.springframework.security.access.prepost.PreAuthorize
@@ -30,6 +31,7 @@ class UserHandler(private val userRepository: UserRepository,
         return req.bodyToMono<User>()
                 .flatMap { userRepository.insert(it.copy(pass = passwordEncoder.encode(it.pass))) }
                 .flatMap { user -> created(URI.create("/users/${user.id}")).syncBody(user) }
+                .withBoom()
     }
 
 }

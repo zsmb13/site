@@ -2,6 +2,7 @@ package co.zsmb.site.backend.setup.mocks
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.ArticleRepository
+import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.security.UserRepository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doAnswer
@@ -23,16 +24,20 @@ fun testBeans() = beans {
                     MockData.ARTICLES.find { it.id == articleId }?.toMono() ?: Mono.empty()
                 }
 
-                on { insert(any<Article>()) } doAnswer {
-                    val article = it.arguments[0] as Article
-                    article.copy(id = MockData.ID).toMono()
-                }
+                on { insert(any<Article>()) } doAnswer { (it.arguments[0] as Article).copy(id = MockData.ID).toMono() }
             }
         }
 
         bean(isPrimary = true) {
             mock<UserRepository> {
                 on { findAll() } doReturn MockData.USERS.toFlux()
+
+                on { findById(any<String>()) } doAnswer {
+                    val userId = it.arguments[0] as String
+                    MockData.USERS.find { it.id == userId }?.toMono() ?: Mono.empty()
+                }
+
+                on { insert(any<User>()) } doAnswer { (it.arguments[0] as User).copy(id = MockData.ID).toMono() }
             }
         }
     }

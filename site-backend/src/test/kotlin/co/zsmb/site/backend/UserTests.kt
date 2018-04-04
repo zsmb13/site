@@ -1,19 +1,23 @@
 package co.zsmb.site.backend
 
+import co.zsmb.site.backend.data.Article
+import co.zsmb.site.backend.extensions.consumeBody
 import co.zsmb.site.backend.extensions.expectBodyAs
 import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringTest
-class UserTests(@Autowired context: ApplicationContext) {
+class UserTests(@Autowired context: ApplicationContext, @Autowired private val passwordEncoder: PasswordEncoder) {
 
     val client: WebTestClient = WebTestClient
             .bindToApplicationContext(context)
@@ -45,6 +49,65 @@ class UserTests(@Autowired context: ApplicationContext) {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBodyAs<List<User>>().isEqualWith(MockData.USERS)
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Create user as ADMIN`() {
+        val user = User("Sally", "12345", true, arrayOf())
+        client.post()
+                .uri("/users")
+                .syncBody(user)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyAs<User>().consumeBody { createdUser ->
+                    assertEquals(MockData.ID, createdUser.id)
+                    assertEquals(user.name, createdUser.name)
+                    assertEquals(user.active, createdUser.active)
+                    assertArrayEquals(user.roles, createdUser.roles)
+                    assertTrue(passwordEncoder.matches(user.password, createdUser.password))
+                }
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Create user as ADMIN with missing body`() {
+        client.post()
+                .uri("/users")
+                .exchange()
+                .expectStatus().isBadRequest()
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Create user as ADMIN with bad format`() {
+        client.post()
+                .uri("/users")
+                .syncBody(Article(title = "foo", content = "bar"))
+                .exchange()
+                .expectStatus().isBadRequest()
+    }
+
+    @Test
+    @WithMockUser(roles = ["USER"])
+    fun `Create user as USER`() {
+        val user = User("Sally", "12345", true, arrayOf())
+        client.post()
+                .uri("/users")
+                .syncBody(user)
+                .exchange()
+                .expectStatus().isForbidden()
+    }
+
+    @Test
+    fun `Create user with no auth`() {
+        val user = User("Sally", "12345", true, arrayOf())
+        client.post()
+                .uri("/users")
+                .syncBody(user)
+                .exchange()
+                .expectStatus().isUnauthorized()
     }
 
 }

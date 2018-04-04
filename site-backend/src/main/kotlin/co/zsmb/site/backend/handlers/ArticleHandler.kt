@@ -2,6 +2,7 @@ package co.zsmb.site.backend.handlers
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.ArticleRepository
+import co.zsmb.site.backend.handlers.util.withBoom
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -28,6 +29,7 @@ class ArticleHandler(private val articleRepository: ArticleRepository) {
         return req.bodyToMono<Article>()
                 .flatMap(articleRepository::insert)
                 .flatMap { article -> created(URI.create("/articles/${article.id}")).syncBody(article) }
+                .withBoom()
     }
 
 }

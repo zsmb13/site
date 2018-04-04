@@ -24,6 +24,15 @@ class HelloTests(@Autowired context: ApplicationContext) {
     }
 
     @Test
+    @WithMockUser(roles = ["USER"])
+    fun `Check API connection as USER`() {
+        client.get()
+                .uri("/")
+                .exchange()
+                .expectStatus().isForbidden()
+    }
+
+    @Test
     @WithMockUser(roles = ["ADMIN"])
     fun `Check API connection as ADMIN`() {
         client.get()
