@@ -1,6 +1,6 @@
 package co.zsmb.site.backend.setup.mocks
 
-import co.zsmb.site.backend.Article
+import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.security.User
 
 object MockData {

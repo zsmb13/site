@@ -1,7 +1,7 @@
 package co.zsmb.site.backend.setup.mocks
 
-import co.zsmb.site.backend.Article
-import co.zsmb.site.backend.ArticleRepository
+import co.zsmb.site.backend.data.Article
+import co.zsmb.site.backend.data.ArticleRepository
 import co.zsmb.site.backend.security.UserRepository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doAnswer

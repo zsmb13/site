@@ -1,5 +1,6 @@
 package co.zsmb.site.backend
 
+import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.extensions.expectBodyAs
 import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.setup.SpringTest

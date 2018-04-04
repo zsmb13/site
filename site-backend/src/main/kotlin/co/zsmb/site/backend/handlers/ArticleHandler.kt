@@ -1,7 +1,7 @@
 package co.zsmb.site.backend.handlers
 
-import co.zsmb.site.backend.Article
-import co.zsmb.site.backend.ArticleRepository
+import co.zsmb.site.backend.data.Article
+import co.zsmb.site.backend.data.ArticleRepository
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
