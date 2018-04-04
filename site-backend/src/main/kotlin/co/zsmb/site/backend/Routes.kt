@@ -1,63 +1,44 @@
 package co.zsmb.site.backend
 
-import co.zsmb.site.backend.security.User
-import co.zsmb.site.backend.security.UserRepository
+import co.zsmb.site.backend.handlers.ArticleHandler
+import co.zsmb.site.backend.handlers.MiscHandler
+import co.zsmb.site.backend.handlers.UserHandler
 import org.springframework.context.support.BeanDefinitionDsl
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
-import org.springframework.web.reactive.function.server.ServerResponse.*
-import org.springframework.web.reactive.function.server.body
-import org.springframework.web.reactive.function.server.bodyToMono
 import org.springframework.web.reactive.function.server.router
-import java.net.URI
 
 internal fun BeanDefinitionDsl.routingBeans() {
     bean {
         router {
-            addHelloRoutes()
+            addMiscRoutes(ref())
             addArticleRoutes(ref())
-            addAuthRoutes(ref(), ref())
+            addAuthRoutes(ref())
         }
     }
 }
 
-private fun RouterFunctionDsl.addHelloRoutes() {
-    GET("/") { ok().build() }
+private fun RouterFunctionDsl.addMiscRoutes(miscHandler: MiscHandler) {
+    GET("/", miscHandler::getHello)
 }
 
-private fun RouterFunctionDsl.addArticleRoutes(articleRepository: ArticleRepository) {
+private fun RouterFunctionDsl.addArticleRoutes(articleHandler: ArticleHandler) {
     "/articles".nest {
-        POST("/") {
-            it.bodyToMono<Article>()
-                    .flatMap(articleRepository::insert)
-                    .flatMap { article ->
-                        created(URI.create("/articles/${article.id}")).syncBody(article)
-                    }
-        }
-        GET("/") {
-            ok().body(articleRepository.findAll())
-        }
-        GET("/{articleId}") {
-            articleRepository.findById(it.pathVariable("articleId"))
-                    .flatMap { ok().syncBody(it) }
-                    .switchIfEmpty(notFound().build())
+        POST("/", articleHandler::createArticle)
+        GET("/", articleHandler::getAllArticles)
+
+        "/{articleId}".nest {
+            GET("/", articleHandler::getArticleById)
         }
     }
 }
 
-private fun RouterFunctionDsl.addAuthRoutes(userRepository: UserRepository, passwordEncoder: PasswordEncoder) {
+private fun RouterFunctionDsl.addAuthRoutes(userHandler: UserHandler) {
     "/users".nest {
-        POST("/") {
-            it.bodyToMono<User>()
-                    .flatMap {
-                        userRepository.insert(it.copy(pass = passwordEncoder.encode(it.pass)))
-                    }
-                    .flatMap { user ->
-                        created(URI.create("/users/${user.id}")).syncBody(user)
-                    }
-        }
-        GET("/") {
-            ok().body(userRepository.findAll())
+        POST("/", userHandler::createUser)
+        GET("/", userHandler::getAllUsers)
+
+        "/{userId}".nest {
+            GET("/", userHandler::getUserById)
         }
     }
 }
