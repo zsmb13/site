@@ -1,10 +1,12 @@
 package co.zsmb.site.backend
 
 import co.zsmb.site.backend.data.Article
+import co.zsmb.site.backend.data.toSummary
 import co.zsmb.site.backend.extensions.expectBodyAs
 import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
+import co.zsmb.site.common.ArticleSummary
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -18,13 +20,42 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     private val client = WebTestClient.bindToApplicationContext(context).build()
 
     @Test
-    fun `Get all articles`() {
+    fun `Get all articles without auth`() {
+        client.get()
+                .uri("/articles")
+                .exchange()
+                .expectStatus().isUnauthorized()
+    }
+
+    @Test
+    @WithMockUser(roles = ["USER"])
+    fun `Get all articles as USER`() {
+        client.get()
+                .uri("/articles")
+                .exchange()
+                .expectStatus().isForbidden()
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Get all articles as ADMIN`() {
         client.get()
                 .uri("/articles")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBodyAs<List<Article>>().isEqualWith(MockData.ARTICLES)
+    }
+
+    @Test
+    fun `Get article summaries`() {
+        val summaries = MockData.ARTICLES.map(Article::toSummary)
+        client.get()
+                .uri("/articlesummaries")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyAs<List<ArticleSummary>>().isEqualWith(summaries)
     }
 
     @Test

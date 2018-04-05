@@ -30,6 +30,9 @@ private fun RouterFunctionDsl.addArticleRoutes(articleHandler: ArticleHandler) {
             GET("/", articleHandler::getArticleById)
         }
     }
+    "/articlesummaries".nest {
+        GET("/", articleHandler::getAllArticleSummaries)
+    }
 }
 
 private fun RouterFunctionDsl.addAuthRoutes(userHandler: UserHandler) {
