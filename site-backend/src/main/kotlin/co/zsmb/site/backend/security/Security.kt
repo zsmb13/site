@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.web.reactive.config.CorsRegistry
+import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.reactive.config.WebFluxConfigurerComposite
 
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
@@ -30,5 +33,14 @@ internal fun BeanDefinitionDsl.securityBeans() {
                 .anyExchange().permitAll()
                 .and().httpBasic()
                 .and().build()
+    }
+    bean<WebFluxConfigurer> {
+        object : WebFluxConfigurerComposite() {
+            override fun addCorsMappings(registry: CorsRegistry) {
+                registry.addMapping("/public/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET")
+            }
+        }
     }
 }

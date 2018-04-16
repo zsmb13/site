@@ -6,7 +6,6 @@ import co.zsmb.site.backend.extensions.expectBodyAs
 import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
-import co.zsmb.site.common.ArticleDetail
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -47,18 +46,17 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .expectBodyAs<List<Article>>().isEqualWith(MockData.ARTICLES)
     }
 
-
     @Test
     @WithMockUser(roles = ["ADMIN"])
     fun `Get article by id`() {
-        val article = MockData.ARTICLES[1].toDetail()
+        val article = MockData.ARTICLES[1]
 
         client.get()
                 .uri("/articles/${article.id}")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyAs<ArticleDetail>().isEqualWith(article)
+                .expectBodyAs<Article>().isEqualWith(article)
     }
 
     @Test
