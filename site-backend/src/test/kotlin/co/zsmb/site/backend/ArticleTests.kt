@@ -1,12 +1,12 @@
 package co.zsmb.site.backend
 
 import co.zsmb.site.backend.data.Article
-import co.zsmb.site.backend.data.toSummary
+import co.zsmb.site.backend.data.toDetail
 import co.zsmb.site.backend.extensions.expectBodyAs
 import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
-import co.zsmb.site.common.ArticleSummary
+import co.zsmb.site.common.ArticleDetail
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -47,30 +47,33 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .expectBodyAs<List<Article>>().isEqualWith(MockData.ARTICLES)
     }
 
-    @Test
-    fun `Get article summaries`() {
-        val summaries = MockData.ARTICLES.map(Article::toSummary)
-        client.get()
-                .uri("/articlesummaries")
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyAs<List<ArticleSummary>>().isEqualWith(summaries)
-    }
 
     @Test
+    @WithMockUser(roles = ["ADMIN"])
     fun `Get article by id`() {
-        val article = MockData.ARTICLES[1]
+        val article = MockData.ARTICLES[1].toDetail()
 
         client.get()
                 .uri("/articles/${article.id}")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyAs<Article>().isEqualWith(article)
+                .expectBodyAs<ArticleDetail>().isEqualWith(article)
     }
 
     @Test
+    fun `Get article by id without auth`() {
+        val article = MockData.ARTICLES[1].toDetail()
+
+        client.get()
+                .uri("/articles/${article.id}")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody().isEmpty()
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
     fun `Get article with invalid id`() {
         client.get()
                 .uri("/articles/${MockData.NON_EXISTENT_ID}")
@@ -82,6 +85,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @Test
     fun `Create new article without auth`() {
         val article = Article(title = "my title", content = "some content")
+
         client.post()
                 .uri("/articles")
                 .syncBody(article)

@@ -2,6 +2,7 @@ package co.zsmb.site.backend
 
 import co.zsmb.site.backend.handlers.ArticleHandler
 import co.zsmb.site.backend.handlers.MiscHandler
+import co.zsmb.site.backend.handlers.PublicArticleHandler
 import co.zsmb.site.backend.handlers.UserHandler
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
@@ -13,6 +14,8 @@ internal fun BeanDefinitionDsl.routingBeans() {
             addMiscRoutes(ref())
             addArticleRoutes(ref())
             addAuthRoutes(ref())
+
+            addPublicRoutes(ref())
         }
     }
 }
@@ -26,12 +29,7 @@ private fun RouterFunctionDsl.addArticleRoutes(articleHandler: ArticleHandler) {
         POST("/", articleHandler::createArticle)
         GET("/", articleHandler::getAllArticles)
 
-        "/{articleId}".nest {
-            GET("/", articleHandler::getArticleById)
-        }
-    }
-    "/articlesummaries".nest {
-        GET("/", articleHandler::getAllArticleSummaries)
+        GET("/{articleId}", articleHandler::getArticleById)
     }
 }
 
@@ -40,8 +38,17 @@ private fun RouterFunctionDsl.addAuthRoutes(userHandler: UserHandler) {
         POST("/", userHandler::createUser)
         GET("/", userHandler::getAllUsers)
 
-        "/{userId}".nest {
-            GET("/", userHandler::getUserById)
+        GET("/{userId}", userHandler::getUserById)
+    }
+}
+
+private fun RouterFunctionDsl.addPublicRoutes(publicArticleHandler: PublicArticleHandler) {
+    "/public".nest {
+        "/articlesummaries".nest {
+            GET("/", publicArticleHandler::getAllArticleSummaries)
+        }
+        "/articledetails".nest {
+            GET("/{articleId}", publicArticleHandler::getArticleDetailById)
         }
     }
 }
