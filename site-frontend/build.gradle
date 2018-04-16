@@ -5,24 +5,17 @@ buildscript {
 
         webDir = "${rootDir}/web"
     }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
 }
 apply plugin: 'kotlin-platform-js'
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'kotlin-dce-js'
 
-repositories {
-    jcenter()
-    mavenCentral()
-}
-
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     expectedBy project(":site-common")
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:$serialization_version"
+
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 
     compile "co.zsmb:koinjs:$koinjs_version"
