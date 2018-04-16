@@ -1,4 +1,4 @@
-package co.zsmb.site.backend
+package co.zsmb.site.backend.tests.api
 
 import co.zsmb.site.backend.setup.SpringTest
 import org.junit.jupiter.api.Test

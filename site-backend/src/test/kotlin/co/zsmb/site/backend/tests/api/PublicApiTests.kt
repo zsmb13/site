@@ -1,4 +1,4 @@
-package co.zsmb.site.backend
+package co.zsmb.site.backend.tests.api
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.toDetail
