@@ -36,6 +36,11 @@ noArg {
     annotation("org.springframework.data.mongodb.core.mapping.Document")
 }
 
+bootJar {
+    destinationDir = file("${projectDir}/out")
+    archiveName = "site.jar"
+}
+
 dependencies {
     // Spring basics
     implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive"
