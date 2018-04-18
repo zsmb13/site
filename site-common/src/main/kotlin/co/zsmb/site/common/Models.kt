@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ArticleSummary(
         val title: String,
+        val url: String,
         val summary: String,
         val publishDate: Long? = null,
         val id: String

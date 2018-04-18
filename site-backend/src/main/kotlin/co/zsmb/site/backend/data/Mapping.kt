@@ -8,6 +8,7 @@ private fun String.renderMarkdown() = Markdown.render(this)
 
 fun Article.toSummary() = ArticleSummary(
         title = title,
+        url = url,
         summary = summary.renderMarkdown(),
         publishDate = publishDate?.time,
         id = id!!
