@@ -20,7 +20,7 @@ class CustomPageHandler(private val customPageRepository: CustomPageRepository) 
         val pageName = req.pathVariable("name")
 
         return customPageRepository.deleteByName(pageName)
-                .transform { req.bodyToMono<CustomPage>() }
+                .then(req.bodyToMono<CustomPage>())
                 .map { it.copy(name = pageName) }
                 .flatMap(customPageRepository::insert)
                 .flatMap { customPage ->

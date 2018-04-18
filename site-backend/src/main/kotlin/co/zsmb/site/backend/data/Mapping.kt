@@ -25,6 +25,5 @@ fun Article.toDetail() = ArticleDetail(
 
 fun CustomPage.render() = CommonCustomPage(
         name = name,
-        content = content.renderMarkdown(),
-        id = id!!
+        content = content.renderMarkdown()
 )

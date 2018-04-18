@@ -23,5 +23,5 @@ data class ArticleDetail(
 @Serializable
 data class CustomPage(
         val name: String,
-        val content: String,
-        val id: String)
+        val content: String
+)

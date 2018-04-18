@@ -7,6 +7,6 @@ interface CustomPageRepository : ReactiveMongoRepository<CustomPage, String> {
 
     fun findByName(name: String): Mono<CustomPage>
 
-    fun deleteByName(name: String): Mono<Void>
+    fun deleteByName(name: String): Mono<Int>
 
 }
