@@ -8,15 +8,15 @@ private fun String.renderMarkdown() = Markdown.render(this)
 
 fun Article.toSummary() = ArticleSummary(
         title = title,
-        summary = summary?.renderMarkdown(),
+        summary = summary.renderMarkdown(),
         publishDate = publishDate?.time,
-        id = id
+        id = id!!
 )
 
 fun Article.toDetail() = ArticleDetail(
         title = title,
-        content = content?.renderMarkdown(),
+        content = content.renderMarkdown(),
         publishDate = publishDate?.time,
         lastModificationDate = lastModificationDate?.time,
-        id = id
+        id = id!!
 )

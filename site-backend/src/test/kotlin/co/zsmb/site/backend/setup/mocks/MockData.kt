@@ -2,6 +2,7 @@ package co.zsmb.site.backend.setup.mocks
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.security.User
+import java.util.*
 
 object MockData {
 
@@ -10,9 +11,26 @@ object MockData {
     const val NON_EXISTENT_ID = "asnfjhn3khr8732bg3in97enfb32"
 
     val ARTICLES = listOf(
-            Article(title = "First", content = "First content", id = "abc123"),
-            Article(title = "Second", content = "Second content", id = "def456"),
-            Article(title = "Third", content = "Third content", id = "ghi789")
+            Article(title = "First",
+                    summary = "This is the first article summary",
+                    url = "first-article",
+                    content = "This is the first article summary which is longer than the content",
+                    id = "abc123",
+                    publishDate = Date(),
+                    lastModificationDate = Date()),
+            Article(title = "Second",
+                    summary = "This is the second article summary",
+                    url = "second-article",
+                    content = "This is the second article summary which is longer than the content",
+                    id = "as46516f",
+                    publishDate = Date(),
+                    lastModificationDate = Date()),
+            Article(title = "Third",
+                    summary = "This is the third article summary",
+                    url = "third-article",
+                    content = "This is the third article summary which is longer than the content",
+                    id = "16ngfre",
+                    publishDate = Date(), lastModificationDate = Date())
     )
 
     val USERS = listOf(

@@ -82,7 +82,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
 
     @Test
     fun `Create new article without auth`() {
-        val article = Article(title = "my title", content = "some content")
+        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
 
         client.post()
                 .uri("/articles")
@@ -94,7 +94,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @Test
     @WithMockUser(roles = ["USER"])
     fun `Create new article as USER`() {
-        val article = Article(title = "my title", content = "some content")
+        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
         client.post()
                 .uri("/articles")
                 .syncBody(article)
@@ -105,7 +105,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @Test
     @WithMockUser(roles = ["ADMIN"])
     fun `Create new article as ADMIN`() {
-        val article = Article(title = "my title", content = "some content")
+        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
         val modifiedArticle = article.copy(id = MockData.ID)
         client.post()
                 .uri("/articles")

@@ -35,7 +35,19 @@ class PublicApiTests(@Autowired context: ApplicationContext) {
     fun `Get article detail`() {
         val detail = MockData.ARTICLES[1].let(Article::toDetail)
         client.get()
-                .uri("/public/articledetails/${detail.id}")
+                .uri("/public/articledetails/id/${detail.id}")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyAs<ArticleDetail>().isEqualWith(detail)
+    }
+
+    @Test
+    fun `Get article detail by URL`() {
+        val article = MockData.ARTICLES[1]
+        val detail = article.let(Article::toDetail)
+        client.get()
+                .uri("/public/articledetails/url/${article.url}")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)

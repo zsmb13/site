@@ -48,7 +48,8 @@ private fun RouterFunctionDsl.addPublicRoutes(publicArticleHandler: PublicArticl
             GET("/", publicArticleHandler::getAllArticleSummaries)
         }
         "/articledetails".nest {
-            GET("/{articleId}", publicArticleHandler::getArticleDetailById)
+            GET("/id/{articleId}", publicArticleHandler::getArticleDetailById)
+            GET("/url/{url}", publicArticleHandler::getArticleDetailByUrl)
         }
     }
 }

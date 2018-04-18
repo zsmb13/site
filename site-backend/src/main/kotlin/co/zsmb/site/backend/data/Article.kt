@@ -6,9 +6,10 @@ import java.util.*
 
 @Document(collection = "articles")
 data class Article(
-        val title: String? = null,
-        val content: String? = null,
-        val summary: String? = null,
+        val title: String,
+        val url: String,
+        val content: String,
+        val summary: String,
         val publishDate: Date? = null,
         val lastModificationDate: Date? = null,
         @Id val id: String? = null)

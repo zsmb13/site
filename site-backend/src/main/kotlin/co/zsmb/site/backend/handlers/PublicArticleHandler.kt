@@ -21,6 +21,13 @@ class PublicArticleHandler(private val articleRepository: ArticleRepository) {
                 .switchIfEmpty(ServerResponse.notFound().build())
     }
 
+    fun getArticleDetailByUrl(req: ServerRequest): Mono<ServerResponse> {
+        return articleRepository.findByUrl(req.pathVariable("url"))
+                .map(Article::toDetail)
+                .transform { ServerResponse.ok().body(it) }
+                .switchIfEmpty(ServerResponse.notFound().build())
+    }
+
     fun getAllArticleSummaries(req: ServerRequest): Mono<ServerResponse> {
         return articleRepository.findAll()
                 .map(Article::toSummary)

@@ -84,7 +84,7 @@ class UserTests(@Autowired context: ApplicationContext, @Autowired private val p
     fun `Create user as ADMIN with bad format`() {
         client.post()
                 .uri("/users")
-                .syncBody(Article(title = "foo", content = "bar"))
+                .syncBody(Article(title = "foo", url = "foo", summary = "ba...", content = "bar"))
                 .exchange()
                 .expectStatus().isBadRequest()
     }
