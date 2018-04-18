@@ -19,3 +19,9 @@ data class ArticleDetail(
         val lastModificationDate: Long? = null,
         val id: String
 )
+
+@Serializable
+data class CustomPage(
+        val name: String,
+        val content: String,
+        val id: String)

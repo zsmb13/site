@@ -2,6 +2,8 @@ package co.zsmb.site.backend.setup.mocks
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.ArticleRepository
+import co.zsmb.site.backend.data.CustomPage
+import co.zsmb.site.backend.data.CustomPageRepository
 import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.security.UserRepository
 import com.nhaarman.mockito_kotlin.any
@@ -24,12 +26,25 @@ fun testBeans() = beans {
                     MockData.ARTICLES.find { it.id == articleId }?.toMono() ?: Mono.empty()
                 }
 
-                on { findByUrl(any<String>()) } doAnswer {
+                on { findByUrl(any()) } doAnswer {
                     val url = it.arguments[0] as String
                     MockData.ARTICLES.find { it.url == url }?.toMono() ?: Mono.empty()
                 }
 
                 on { insert(any<Article>()) } doAnswer { (it.arguments[0] as Article).copy(id = MockData.ID).toMono() }
+            }
+        }
+
+        bean(isPrimary = true) {
+            mock<CustomPageRepository> {
+                on { findByName(any()) } doAnswer {
+                    val name = it.arguments[0] as String
+                    MockData.CUSTOM_PAGES.find { it.name == name }?.toMono() ?: Mono.empty()
+                }
+
+                on { deleteByName(any()) } doAnswer { Mono.create { it.success() } }
+
+                on { insert(any<CustomPage>()) } doAnswer { (it.arguments[0] as CustomPage).copy(id = MockData.ID).toMono() }
             }
         }
 

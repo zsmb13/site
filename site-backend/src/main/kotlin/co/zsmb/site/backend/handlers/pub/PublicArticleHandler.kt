@@ -1,4 +1,4 @@
-package co.zsmb.site.backend.handlers
+package co.zsmb.site.backend.handlers.pub
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.ArticleRepository
@@ -16,15 +16,15 @@ class PublicArticleHandler(private val articleRepository: ArticleRepository) {
 
     fun getArticleDetailById(req: ServerRequest): Mono<ServerResponse> {
         return articleRepository.findById(req.pathVariable("articleId"))
-                .map(Article::toDetail)
-                .transform { ServerResponse.ok().body(it) }
+                .map { it.toDetail() }
+                .flatMap { ServerResponse.ok().syncBody(it) }
                 .switchIfEmpty(ServerResponse.notFound().build())
     }
 
     fun getArticleDetailByUrl(req: ServerRequest): Mono<ServerResponse> {
         return articleRepository.findByUrl(req.pathVariable("url"))
                 .map(Article::toDetail)
-                .transform { ServerResponse.ok().body(it) }
+                .flatMap { ServerResponse.ok().syncBody(it) }
                 .switchIfEmpty(ServerResponse.notFound().build())
     }
 
