@@ -21,6 +21,7 @@
 
     <!-- Kotlin, Kagu, application -->
     <script src="js/kotlin.js"></script>
+    <script src="js/kotlinx-serialization-runtime-js.js"></script>
     <script src="js/koin.js"></script>
     <script src="js/kagu.js"></script>
     <script src="app.js"></script>
@@ -28,20 +29,20 @@
 <body>
 <div class="container justify-content-center" style="min-width: 0; max-width: 50em;">
     <div class="mx-md-5 mx-sm-3 mx-auto my-md-4 my-sm-2">
-        <h1 class="text-center">zsmb.co</h1>
-        <hr/>
+        <h3 class="text-center">zsmb.co</h3>
+        <hr class="my-2"/>
         <ul class="nav justify-content-center">
             <li class="nav-item">
                 <a class="nav-link active" href="#">Blog</a>
             </li>
+            <!--<li class="nav-item">-->
+            <!--<a class="nav-link" href="#">Projects</a>-->
+            <!--</li>-->
             <li class="nav-item">
-                <a class="nav-link" href="#">Projects</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" data-kt-href="/about" href="#">About</a>
             </li>
         </ul>
-        <hr/>
+        <hr class="my-2"/>
         <app-root></app-root>
     </div>
 </div>
