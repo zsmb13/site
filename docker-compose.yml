@@ -18,6 +18,12 @@ services:
     restart: always
     ports:
       - "8080:8080"
+      - "8443:8443"
+    environment:
+      - SSL_PASS=${SSL_PASS}
+      - SSL_ALIAS=${SSL_ALIAS}
+    volumes:
+      - /etc/letsencrypt:/data/ssl
 
   frontend:
     image: site_frontend
@@ -27,3 +33,6 @@ services:
     restart: always
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/data/ssl

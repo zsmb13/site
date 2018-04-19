@@ -10,7 +10,7 @@ import kotlinx.serialization.serializer
 
 class ApiServiceImpl(private val httpService: HttpService) : ApiService {
 
-    private val baseUrl = "http://localhost:8080/public"
+    private val baseUrl = "https://zsmb.co:8443/public"
 
     override fun getArticleSummaries(callback: (List<ArticleSummary>) -> Unit) {
         httpService.get("$baseUrl/articlesummaries",
