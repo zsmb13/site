@@ -3,7 +3,7 @@ buildscript {
         koinjs_version = '0.1.3'
         kagu_version = '0.2.3'
 
-        webDir = "${rootDir}/web"
+        webDir = "${projectDir}/web"
     }
 }
 apply plugin: 'kotlin-platform-js'

@@ -18,3 +18,12 @@ services:
     restart: always
     ports:
       - "8080:8080"
+
+  frontend:
+    image: site_frontend
+    build:
+      context: site-frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
