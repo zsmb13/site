@@ -54,7 +54,7 @@ class UserTests(@Autowired context: ApplicationContext, @Autowired private val p
     @Test
     @WithMockUser(roles = ["ADMIN"])
     fun `Create user as ADMIN`() {
-        val user = User("Sally", "12345", true, arrayOf())
+        val user = User("Sally", "12345", true, arrayOf("ROLE_TEST"))
         client.post()
                 .uri("/users")
                 .syncBody(user)
@@ -68,6 +68,35 @@ class UserTests(@Autowired context: ApplicationContext, @Autowired private val p
                     assertArrayEquals(user.roles, createdUser.roles)
                     assertTrue(passwordEncoder.matches(user.password, createdUser.password))
                 }
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Update user as ADMIN`() {
+        val user = MockData.USERS[2]
+        client.put()
+                .uri("/users/${user.id}")
+                .syncBody(user)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyAs<User>().consumeBody { createdUser ->
+                    assertEquals(user.id, createdUser.id)
+                    assertEquals(user.name, createdUser.name)
+                    assertEquals(user.active, createdUser.active)
+                    assertArrayEquals(user.roles, createdUser.roles)
+                    assertTrue(passwordEncoder.matches(user.password, createdUser.password))
+                }
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Remove user as ADMIN`() {
+        client.delete()
+                .uri("/users/${MockData.USERS[0].id}")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().isEmpty()
     }
 
     @Test

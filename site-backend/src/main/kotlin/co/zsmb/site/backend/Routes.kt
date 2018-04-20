@@ -45,7 +45,11 @@ private fun RouterFunctionDsl.addAuthRoutes(userHandler: UserHandler) {
         POST("/", userHandler::createUser)
         GET("/", userHandler::getAllUsers)
 
-        GET("/{userId}", userHandler::getUserById)
+        "/{userId}".nest {
+            GET("/", userHandler::getUserById)
+            PUT("/", userHandler::updateUserById)
+            DELETE("/", userHandler::removeUserById)
+        }
     }
 }
 

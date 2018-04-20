@@ -4,6 +4,7 @@ import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.ArticleRepository
 import co.zsmb.site.backend.data.CustomPage
 import co.zsmb.site.backend.data.CustomPageRepository
+import co.zsmb.site.backend.extensions.monoOfVoid
 import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.security.UserRepository
 import com.nhaarman.mockito_kotlin.any
@@ -57,7 +58,22 @@ fun testBeans() = beans {
                     MockData.USERS.find { it.id == userId }?.toMono() ?: Mono.empty()
                 }
 
-                on { insert(any<User>()) } doAnswer { (it.arguments[0] as User).copy(id = MockData.ID).toMono() }
+                on { findByName(any<String>()) } doAnswer {
+                    val name = it.arguments[0] as String
+                    MockData.USERS.find { it.name == name }?.toMono() ?: Mono.empty()
+                }
+
+                on { deleteById(any<String>()) } doAnswer { monoOfVoid() }
+
+                on { insert(any<User>()) } doAnswer {
+                    val user = it.arguments[0] as User
+                    user.copy(id = MockData.ID).toMono()
+                }
+
+                on { save(any<User>()) } doAnswer {
+                    val user = it.arguments[0] as User
+                    user.toMono()
+                }
             }
         }
     }

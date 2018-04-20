@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.server.ServerResponse.*
 import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.core.publisher.Mono
+import reactor.util.function.Tuple2
+import reactor.util.function.Tuples
 import java.net.URI
 
 @Component
@@ -29,10 +31,53 @@ class UserHandler(private val userRepository: UserRepository,
 
     fun createUser(req: ServerRequest): Mono<ServerResponse> {
         return req.bodyToMono<User>()
-                .flatMap { userRepository.insert(it.copy(pass = passwordEncoder.encode(it.pass))) }
-                .flatMap { user -> created(URI.create("/users/${user.id}")).syncBody(user) }
+                .flatMap { user ->
+                    userRepository.findByName(user.name!!)
+                            .map { repoUser -> Tuples.of(user, repoUser) }
+                            .defaultIfEmpty(Tuples.of(user, User()))
+                }
+                .flatMap { (reqUser, repoUser) ->
+                    if (repoUser.id == null) {
+                        userRepository
+                                .insert(reqUser.copy(pass = passwordEncoder.encode(reqUser.pass)))
+                                .flatMap { user -> created(URI.create("/users/${user.id}")).syncBody(user) }
+                    } else {
+                        badRequest().build()
+                    }
+                }
                 .withBoom()
     }
 
-}
+    fun updateUserById(req: ServerRequest): Mono<ServerResponse> {
+        return req.bodyToMono<User>()
+                .flatMap { user ->
+                    userRepository.findByName(user.name!!)
+                            .map { repoUser -> Tuples.of(user, repoUser) }
+                            .defaultIfEmpty(Tuples.of(user, User()))
+                }
+                .flatMap { (reqUser, repoUser) ->
+                    val reqUserId = req.pathVariable("userId")
+                    if (repoUser.id != reqUserId) {
+                        badRequest().build()
+                    } else {
+                        val userToInsert = reqUser.copy(
+                                id = reqUserId,
+                                pass = passwordEncoder.encode(reqUser.pass))
+                        userRepository
+                                .save(userToInsert)
+                                .flatMap { ok().syncBody(it) }
+                    }
+                }
+                .withBoom()
+    }
 
+    fun removeUserById(req: ServerRequest): Mono<ServerResponse> {
+        return userRepository.deleteById(req.pathVariable("userId"))
+                .then(ok().build())
+                .withBoom()
+    }
+
+    private operator fun <T1, T2> Tuple2<T1, T2>.component1() = t1
+    private operator fun <T1, T2> Tuple2<T1, T2>.component2() = t2
+
+}
