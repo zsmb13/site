@@ -32,6 +32,11 @@ fun testBeans() = beans {
                     MockData.ARTICLES.find { it.url == url }?.toMono() ?: Mono.empty()
                 }
 
+                on { save(any<Article>()) } doAnswer {
+                    val user = it.arguments[0] as Article
+                    user.toMono()
+                }
+
                 on { insert(any<Article>()) } doAnswer { (it.arguments[0] as Article).copy(id = MockData.ID).toMono() }
             }
         }

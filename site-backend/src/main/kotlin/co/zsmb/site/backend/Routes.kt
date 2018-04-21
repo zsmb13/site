@@ -32,7 +32,10 @@ private fun RouterFunctionDsl.addArticleRoutes(articleHandler: ArticleHandler) {
         POST("/", articleHandler::createArticle)
         GET("/", articleHandler::getAllArticles)
 
-        GET("/{articleId}", articleHandler::getArticleById)
+        "/{articleId}".nest {
+            GET("/", articleHandler::getArticleById)
+            PUT("/", articleHandler::updateArticle)
+        }
     }
 }
 

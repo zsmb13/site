@@ -16,23 +16,24 @@ object MockData {
             Article(title = "First",
                     summary = "This is the first article summary",
                     url = "first-article",
-                    content = "This is the first article summary which is longer than the content",
+                    content = "This is the first article content which is longer than the summary",
                     id = "abc123",
                     publishDate = Date(),
                     lastModificationDate = Date()),
             Article(title = "Second",
                     summary = "This is the second article summary",
                     url = "second-article",
-                    content = "This is the second article summary which is longer than the content",
+                    content = "This is the second article content which is longer than the summary",
                     id = "as46516f",
                     publishDate = Date(),
                     lastModificationDate = Date()),
             Article(title = "Third",
                     summary = "This is the third article summary",
                     url = "third-article",
-                    content = "This is the third article summary which is longer than the content",
+                    content = "This is the third article content which is longer than the summary",
                     id = "16ngfre",
-                    publishDate = Date(), lastModificationDate = Date())
+                    publishDate = Date(),
+                    lastModificationDate = Date())
     )
 
     val USERS = listOf(

@@ -2,16 +2,19 @@ package co.zsmb.site.backend.tests.api
 
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.toDetail
+import co.zsmb.site.backend.extensions.consumeBody
 import co.zsmb.site.backend.extensions.expectBodyAs
 import co.zsmb.site.backend.extensions.isEqualWith
 import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.*
 
 @SpringTest
 class ArticleTests(@Autowired context: ApplicationContext) {
@@ -106,7 +109,6 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @WithMockUser(roles = ["ADMIN"])
     fun `Create new article as ADMIN`() {
         val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
-        val modifiedArticle = article.copy(id = MockData.ID)
         client.post()
                 .uri("/articles")
                 .syncBody(article)
@@ -114,7 +116,32 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .expectStatus().isCreated()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectHeader().valueEquals("location", "/articles/${MockData.ID}")
-                .expectBodyAs<Article>().isEqualWith(modifiedArticle)
+                .expectBodyAs<Article>().consumeBody { createdArticle ->
+                    assertEquals(article.title, createdArticle.title)
+                    assertEquals(article.content, createdArticle.content)
+                    assertEquals(article.url, createdArticle.url)
+                    assertEquals(article.summary, createdArticle.summary)
+                    assertEquals(article.content, createdArticle.content)
+                    assertEquals(MockData.ID, createdArticle.id)
+                }
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Update article as ADMIN`() {
+        val article = MockData.ARTICLES[2]
+        val updatedArticle = article.copy(content = "new content", publishDate = Date(2512632L), id = "dgsmdfog3gdsg")
+        client.put()
+                .uri("/articles/${article.id}")
+                .syncBody(updatedArticle)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyAs<Article>().consumeBody { responseArticle ->
+                    assertEquals(updatedArticle.content, responseArticle.content)
+                    assertEquals(article.id, responseArticle.id)
+                    assertEquals(article.publishDate, responseArticle.publishDate)
+                }
     }
 
 }

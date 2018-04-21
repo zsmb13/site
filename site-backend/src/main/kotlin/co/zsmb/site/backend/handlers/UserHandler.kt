@@ -1,5 +1,7 @@
 package co.zsmb.site.backend.handlers
 
+import co.zsmb.site.backend.handlers.util.component1
+import co.zsmb.site.backend.handlers.util.component2
 import co.zsmb.site.backend.handlers.util.withBoom
 import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.security.UserRepository
@@ -12,7 +14,6 @@ import org.springframework.web.reactive.function.server.ServerResponse.*
 import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.core.publisher.Mono
-import reactor.util.function.Tuple2
 import reactor.util.function.Tuples
 import java.net.URI
 
@@ -76,8 +77,5 @@ class UserHandler(private val userRepository: UserRepository,
                 .then(ok().build())
                 .withBoom()
     }
-
-    private operator fun <T1, T2> Tuple2<T1, T2>.component1() = t1
-    private operator fun <T1, T2> Tuple2<T1, T2>.component2() = t2
 
 }
