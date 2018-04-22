@@ -24,13 +24,15 @@ class PublicApiTests(@Autowired context: ApplicationContext) {
 
     @Test
     fun `Get article summaries`() {
-        val summaries = MockData.ARTICLES.map(Article::toSummary)
+        val expectedSummaries = MockData.ARTICLES
+                .sortedByDescending { it.publishDate }
+                .map(Article::toSummary)
         client.get()
                 .uri("/public/articlesummaries")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBodyAs<List<ArticleSummary>>().isEqualWith(summaries)
+                .expectBodyAs<List<ArticleSummary>>().isEqualWith(expectedSummaries)
     }
 
     @Test

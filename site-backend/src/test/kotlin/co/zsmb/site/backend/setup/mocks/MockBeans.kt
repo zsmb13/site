@@ -22,6 +22,9 @@ fun testBeans() = beans {
             mock<ArticleRepository> {
                 on { findAll() } doReturn MockData.ARTICLES.toFlux()
 
+                on { findAllByOrderByPublishDateDesc() } doReturn
+                        MockData.ARTICLES.sortedByDescending { it.publishDate }.toFlux()
+
                 on { findById(any<String>()) } doAnswer {
                     val articleId = it.arguments[0] as String
                     MockData.ARTICLES.find { it.id == articleId }?.toMono() ?: Mono.empty()

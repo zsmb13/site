@@ -29,7 +29,7 @@ class PublicArticleHandler(private val articleRepository: ArticleRepository) {
     }
 
     fun getAllArticleSummaries(req: ServerRequest): Mono<ServerResponse> {
-        return articleRepository.findAll()
+        return articleRepository.findAllByOrderByPublishDateDesc()
                 .map(Article::toSummary)
                 .transform { ServerResponse.ok().body(it) }
                 .toMono()
