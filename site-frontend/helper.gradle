@@ -59,6 +59,14 @@ build.doLast {
         into "$webDir"
     }
 
+    // copy resources into webdir
+    copy {
+        includeEmptyDirs = false
+
+        from("$projectDir/src/main/resources/")
+        into "$webDir"
+    }
+
     // copies own top level .css files into webdir/css
     copy {
         from("$projectDir/src/main/kotlin/$rootPckg") {
