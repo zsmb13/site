@@ -27,4 +27,26 @@ class MarkdownTest {
         assertEquals("<p>Brown cow</p>\n", Markdown.render("Brown cow"))
     }
 
+    @Test
+    fun `Table rendering`() {
+        val input = """
+            | Col A | Col B | Col C |
+            | ----- | ----- | ----- |
+            | foo   | bar   | qwert |
+            """.trimIndent()
+
+        val expectedOutput = """
+            <table>
+            <thead>
+            <tr><th>Col A</th><th>Col B</th><th>Col C</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>foo</td><td>bar</td><td>qwert</td></tr>
+            </tbody>
+            </table>
+            """.trimIndent()
+
+        assertEquals(expectedOutput, Markdown.render(input).trim())
+    }
+
 }
