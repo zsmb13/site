@@ -8,7 +8,6 @@ import co.zsmb.kagu.services.navigation.Navigator
 import co.zsmb.kagu.services.pathparams.PathParams
 import co.zsmb.site.common.ArticleDetail
 import co.zsmb.site.frontend.services.network.ApiService
-import co.zsmb.site.frontend.util.HLJS
 import co.zsmb.site.frontend.util.appendMarkdown
 import co.zsmb.site.frontend.util.removeChildren
 import org.w3c.dom.HTMLElement
@@ -38,7 +37,7 @@ class ArticleDetailController : Controller() {
         title.textContent = articleDetail.title
         contentRoot.removeChildren()
         contentRoot.appendMarkdown(articleDetail.content)
-        HLJS.highlightBlock(contentRoot)
+//        HLJS.highlightBlock(contentRoot)
     }
 
     private fun onError() {
