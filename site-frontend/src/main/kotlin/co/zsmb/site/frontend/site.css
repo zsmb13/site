@@ -1,0 +1,9 @@
+:not(pre) > code {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    color: #000;
+    background-color: #F1F1F1;
+    padding: 3px;
+    font-family: Monaco, Consolas, "Andale  Mono", "DejaVu Sans Mono", monospace;
+}
