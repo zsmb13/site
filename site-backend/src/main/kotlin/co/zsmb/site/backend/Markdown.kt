@@ -1,8 +1,10 @@
 package co.zsmb.site.backend
 
 import org.commonmark.Extension
+import org.commonmark.ext.gfm.tables.TableBlock
 import org.commonmark.ext.gfm.tables.TablesExtension
 import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.AttributeProvider
 import org.commonmark.renderer.html.HtmlRenderer
 
 internal object Markdown {
@@ -16,6 +18,13 @@ internal object Markdown {
     private val htmlRenderer = HtmlRenderer
             .builder()
             .extensions(extensions)
+            .attributeProviderFactory {
+                AttributeProvider { node, _, attributes ->
+                    when (node) {
+                        is TableBlock -> attributes["class"] = "table table-bordered table-sm"
+                    }
+                }
+            }
             .build()
 
     fun render(markdownString: String): String {
