@@ -13,7 +13,7 @@ object HLJS {
     fun highlightBlock(block: HTMLElement) {
         block.visitChildrenThat(
                 predicate = {
-                    it.nodeName.toLowerCase() == "code"
+                    it.nodeName.toLowerCase() == "code" && it.parentNode?.nodeName?.toLowerCase() == "pre"
                 },
                 action = { code ->
                     hljs.highlightBlock(code as HTMLElement)
