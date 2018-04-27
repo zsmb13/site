@@ -26,8 +26,6 @@ h1 {
 
 h2 {
     margin-top: 1em;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: .2em;
 }
 
 h2 + h3 {
