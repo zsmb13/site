@@ -36,17 +36,15 @@ class ArticleListController : Controller() {
 
         apiService.getArticleSummaries { summaries ->
             listRoot.removeChildren()
-            summaries.forEach {
-                addArticleSummary(it)
-            }
+            summaries.forEach(::addArticleSummary)
         }
     }
 
-    private fun addArticleSummary(it: ArticleSummary) {
+    private fun addArticleSummary(articleSummary: ArticleSummary) {
         createComponent(listRoot, ArticleSummaryComponent,
-                "title" to it.title,
-                "summary" to it.summary,
-                "url" to it.url)
+                "title" to articleSummary.title,
+                "summary" to articleSummary.summary,
+                "url" to articleSummary.url)
     }
 
 }
