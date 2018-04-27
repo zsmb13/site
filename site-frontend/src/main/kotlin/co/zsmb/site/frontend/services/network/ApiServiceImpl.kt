@@ -10,6 +10,10 @@ import kotlinx.serialization.serializer
 
 class ApiServiceImpl(private val httpService: HttpService) : ApiService {
 
+    init {
+        httpService.backoffStrategy = HttpService.BackoffStrategy.Exponential
+    }
+
     private val baseUrl = "https://zsmb.co:8443/public"
 
     override fun getArticleSummaries(callback: (List<ArticleSummary>) -> Unit) {
