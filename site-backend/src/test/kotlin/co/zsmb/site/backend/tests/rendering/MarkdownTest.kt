@@ -17,14 +17,14 @@ class MarkdownTest {
             # Title
             Hello world
             """.trimIndent()
-        assertEquals("<h1>Title</h1>\n<p>Hello world</p>\n", Markdown.render(input))
+        assertEquals("<h1>Title</h1>\n<p>Hello world</p>", Markdown.render(input).trim())
     }
 
     @Test
     fun `Multiple render calls`() {
-        assertEquals("<p>Hello world</p>\n", Markdown.render("Hello world"))
-        assertEquals("<p>Hey there</p>\n", Markdown.render("Hey there"))
-        assertEquals("<p>Brown cow</p>\n", Markdown.render("Brown cow"))
+        assertEquals("<p>Hello world</p>", Markdown.render("Hello world").trim())
+        assertEquals("<p>Hey there</p>", Markdown.render("Hey there").trim())
+        assertEquals("<p>Brown cow</p>", Markdown.render("Brown cow").trim())
     }
 
     @Test
@@ -47,6 +47,11 @@ class MarkdownTest {
             """.trimIndent()
 
         assertEquals(expectedOutput, Markdown.render(input).trim())
+    }
+
+    @Test
+    fun `Strikethrough rendering`() {
+        assertEquals("<p><del>text</del></p>", Markdown.render("~~text~~").trim())
     }
 
 }
