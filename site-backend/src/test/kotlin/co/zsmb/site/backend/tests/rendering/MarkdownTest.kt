@@ -36,7 +36,7 @@ class MarkdownTest {
             """.trimIndent()
 
         val expectedOutput = """
-            <table>
+            <table class="table table-bordered table-sm">
             <thead>
             <tr><th>Col A</th><th>Col B</th><th>Col C</th></tr>
             </thead>
