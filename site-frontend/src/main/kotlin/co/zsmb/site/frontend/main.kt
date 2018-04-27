@@ -5,6 +5,7 @@ import co.zsmb.site.frontend.components.about.AboutComponent
 import co.zsmb.site.frontend.components.article.detail.ArticleDetailComponent
 import co.zsmb.site.frontend.components.article.list.ArticleListComponent
 import co.zsmb.site.frontend.components.article.summary.ArticleSummaryComponent
+import co.zsmb.site.frontend.components.loading.LoadingComponent
 import co.zsmb.site.frontend.components.notfound.NotFoundComponent
 import co.zsmb.site.frontend.services.network.ApiModule
 
@@ -17,17 +18,10 @@ fun main(args: Array<String>) = application {
 
     components {
         +ArticleSummaryComponent
+        +LoadingComponent
     }
 
     routing {
-        //        defaultState {
-//            path = "/"
-//            handler = ArticleListComponent
-//        }
-//        state {
-//            path = "/articles"
-//            handler = ArticleListComponent
-//        }
         defaultState {
             path = "/404"
             handler = NotFoundComponent

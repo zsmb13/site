@@ -5,6 +5,7 @@ import co.zsmb.kagu.core.Controller
 import co.zsmb.kagu.core.createComponent
 import co.zsmb.kagu.core.di.inject
 import co.zsmb.kagu.core.lookup
+import co.zsmb.site.common.ArticleSummary
 import co.zsmb.site.frontend.components.article.summary.ArticleSummaryComponent
 import co.zsmb.site.frontend.services.network.ApiService
 import co.zsmb.site.frontend.util.removeChildren
@@ -18,9 +19,9 @@ object ArticleListComponent : Component(
 
 class ArticleListController : Controller() {
 
-    val listRoot by lookup<HTMLDivElement>("list-root")
+    private val listRoot by lookup<HTMLDivElement>("list-root")
 
-    val apiService by inject<ApiService>()
+    private val apiService by inject<ApiService>()
 
     override fun onCreate() {
         super.onCreate()
@@ -30,15 +31,22 @@ class ArticleListController : Controller() {
     override fun onAdded() {
         super.onAdded()
 
+        listRoot.removeChildren()
+        co.zsmb.site.frontend.components.loading.addLoadingSpinner(this, listRoot)
+
         apiService.getArticleSummaries { summaries ->
             listRoot.removeChildren()
             summaries.forEach {
-                createComponent(listRoot, ArticleSummaryComponent,
-                        "title" to it.title,
-                        "summary" to it.summary,
-                        "url" to it.url)
+                addArticleSummary(it)
             }
         }
+    }
+
+    private fun addArticleSummary(it: ArticleSummary) {
+        createComponent(listRoot, ArticleSummaryComponent,
+                "title" to it.title,
+                "summary" to it.summary,
+                "url" to it.url)
     }
 
 }

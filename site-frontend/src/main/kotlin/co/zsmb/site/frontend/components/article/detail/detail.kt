@@ -7,6 +7,7 @@ import co.zsmb.kagu.core.lookup
 import co.zsmb.kagu.services.navigation.Navigator
 import co.zsmb.kagu.services.pathparams.PathParams
 import co.zsmb.site.common.ArticleDetail
+import co.zsmb.site.frontend.components.loading.addLoadingSpinner
 import co.zsmb.site.frontend.services.network.ApiService
 import co.zsmb.site.frontend.util.appendMarkdown
 import co.zsmb.site.frontend.util.removeChildren
@@ -30,11 +31,17 @@ class ArticleDetailController : Controller() {
 
     override fun onAdded() {
         val articleUrl = pathParams.getStringUnsafe("articleUrl")
+
+        title.textContent = ""
+        contentRoot.removeChildren()
+        addLoadingSpinner(this, contentRoot)
+
         apiService.getArticleDetail(articleUrl, ::displayArticle, ::onError)
     }
 
     private fun displayArticle(articleDetail: ArticleDetail) {
         title.textContent = articleDetail.title
+
         contentRoot.removeChildren()
         contentRoot.appendMarkdown(articleDetail.content)
 //        HLJS.highlightBlock(contentRoot)
