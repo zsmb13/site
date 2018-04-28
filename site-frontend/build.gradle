@@ -1,7 +1,7 @@
 buildscript {
     ext {
         koinjs_version = '0.9.1'
-        kagu_version = '0.2.4'
+        kagu_version = '0.2.5'
 
         webDir = "${projectDir}/web"
     }

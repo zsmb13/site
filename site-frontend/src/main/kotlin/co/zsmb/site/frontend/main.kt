@@ -22,6 +22,9 @@ fun main(args: Array<String>) = application {
     }
 
     routing {
+        config {
+            noHashMode = true
+        }
         defaultState {
             path = "/404"
             handler = NotFoundComponent

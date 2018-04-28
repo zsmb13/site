@@ -14,7 +14,8 @@ class ApiServiceImpl(private val httpService: HttpService) : ApiService {
         httpService.backoffStrategy = HttpService.BackoffStrategy.Exponential
     }
 
-    private val baseUrl = "https://zsmb.co:8443/public"
+    //    private val baseUrl = "https://zsmb.co:8443/public"
+    private val baseUrl = "http://localhost:8080/public"
 
     override fun getArticleSummaries(callback: (List<ArticleSummary>) -> Unit) {
         httpService.get("$baseUrl/articlesummaries",
