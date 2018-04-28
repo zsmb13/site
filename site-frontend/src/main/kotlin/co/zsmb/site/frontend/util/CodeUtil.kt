@@ -15,20 +15,21 @@ object CodeUtil {
     fun highlightKotlinCodeBlocks(block: HTMLElement) {
         block.visitChildrenThat(
                 predicate = {
-                    it is HTMLElement
-                            && it.nodeName.toLowerCase() == "code"
-                            && it.parentNode?.nodeName?.toLowerCase() == "pre"
-                            && it.className.contains("kotlin")
+                    it.nodeName.toLowerCase() == "code" && it.parentNode?.nodeName?.toLowerCase() == "pre"
                 },
                 action = { code ->
                     code as HTMLElement
                     val textContent = code.textContent
 
-                    if (textContent != null && textContent.contains("fun main(args: Array<String>)")) {
-                        KotlinPlayground(code)
+                    if (code.className.contains("kotlin")) {
+                        if (textContent != null && textContent.contains("fun main(args: Array<String>)")) {
+                            KotlinPlayground(code)
+                        } else {
+                            code.setAttribute("data-highlight-only", "true")
+                            KotlinPlayground(code)
+                        }
                     } else {
-                        code.setAttribute("data-highlight-only", "true")
-                        KotlinPlayground(code)
+                        hljs.highlightBlock(code)
                     }
                 }
         )

@@ -8,10 +8,13 @@
     font-family: Monaco, Consolas, "Andale  Mono", "DejaVu Sans Mono", monospace;
 }
 
+pre {
+    margin-bottom: 0;
+}
+
 pre code {
-    background: #F00;
-    border-left: 1px solid #ccc;
-    margin: .1em 5px;
+    border-left: 5px solid #ccc;
+    margin: .1em 10px;
     padding: 0;
 }
 
