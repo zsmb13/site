@@ -45,7 +45,7 @@ class ArticleDetailController : Controller() {
 
         contentRoot.removeChildren()
         contentRoot.appendMarkdown(articleDetail.content)
-        CodeUtil.highlightCodeBlocks(contentRoot)
+        CodeUtil.highlightKotlinCodeBlocks(contentRoot)
     }
 
     private fun onError() {

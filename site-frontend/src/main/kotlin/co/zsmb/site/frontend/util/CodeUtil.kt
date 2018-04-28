@@ -12,10 +12,13 @@ private external fun KotlinPlayground(block: HTMLElement)
 
 object CodeUtil {
 
-    fun highlightCodeBlocks(block: HTMLElement) {
+    fun highlightKotlinCodeBlocks(block: HTMLElement) {
         block.visitChildrenThat(
                 predicate = {
-                    it.nodeName.toLowerCase() == "code" && it.parentNode?.nodeName?.toLowerCase() == "pre"
+                    it is HTMLElement
+                            && it.nodeName.toLowerCase() == "code"
+                            && it.parentNode?.nodeName?.toLowerCase() == "pre"
+                            && it.className.contains("kotlin")
                 },
                 action = { code ->
                     code as HTMLElement
@@ -24,7 +27,8 @@ object CodeUtil {
                     if (textContent != null && textContent.contains("fun main(args: Array<String>)")) {
                         KotlinPlayground(code)
                     } else {
-                        hljs.highlightBlock(code)
+                        code.setAttribute("data-highlight-only", "true")
+                        KotlinPlayground(code)
                     }
                 }
         )
