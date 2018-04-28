@@ -21,13 +21,9 @@ object CodeUtil {
                     code as HTMLElement
                     val textContent = code.textContent
 
-                    if (code.className.contains("kotlin")) {
-                        if (textContent != null && textContent.contains("fun main(args: Array<String>)")) {
-                            KotlinPlayground(code)
-                        } else {
-                            code.setAttribute("data-highlight-only", "true")
-                            KotlinPlayground(code)
-                        }
+                    if (code.className.contains("kotlin") && textContent != null
+                            && textContent.contains("fun main(args: Array<String>)")) {
+                        KotlinPlayground(code)
                     } else {
                         hljs.highlightBlock(code)
                     }
