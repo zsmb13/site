@@ -1,6 +1,7 @@
 package co.zsmb.site.backend.tests.api
 
 import co.zsmb.site.backend.data.Article
+import co.zsmb.site.backend.data.ArticleRepository
 import co.zsmb.site.backend.data.toDetail
 import co.zsmb.site.backend.extensions.consumeBody
 import co.zsmb.site.backend.extensions.expectBodyAs
@@ -9,6 +10,7 @@ import co.zsmb.site.backend.setup.SpringTest
 import co.zsmb.site.backend.setup.mocks.MockData
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
@@ -17,7 +19,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.*
 
 @SpringTest
-class ArticleTests(@Autowired context: ApplicationContext) {
+class ArticleTests(
+        @Autowired context: ApplicationContext,
+        @Autowired val articleRepository: ArticleRepository
+) {
 
     private val client = WebTestClient.bindToApplicationContext(context).build()
 
@@ -142,6 +147,39 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                     assertEquals(article.id, responseArticle.id)
                     assertEquals(updatedArticle.publishDate, responseArticle.publishDate)
                 }
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Remove article as ADMIN`() {
+        val article = MockData.ARTICLES[1]
+        client.delete()
+                .uri("/articles/${article.id}")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyAs<Article>().isEqualWith(article)
+
+        verify(articleRepository).deleteById(article.id)
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Attempt to remove non-existent article as ADMIN`() {
+        client.delete()
+                .uri("/articles/${MockData.NON_EXISTENT_ID}")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody().isEmpty()
+    }
+
+    @Test
+    fun `Remove article with no auth`() {
+        val article = MockData.ARTICLES[1]
+        client.delete()
+                .uri("/articles/${article.id}")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody().isEmpty()
     }
 
 }

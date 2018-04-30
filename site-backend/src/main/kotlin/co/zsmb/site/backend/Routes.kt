@@ -35,6 +35,7 @@ private fun RouterFunctionDsl.addArticleRoutes(articleHandler: ArticleHandler) {
         "/{articleId}".nest {
             GET("/", articleHandler::getArticleById)
             PUT("/", articleHandler::updateArticle)
+            DELETE("/", articleHandler::removeArticleById)
         }
     }
 }

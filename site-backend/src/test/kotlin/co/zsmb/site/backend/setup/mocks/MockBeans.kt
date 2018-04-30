@@ -41,6 +41,8 @@ fun testBeans() = beans {
                 }
 
                 on { insert(any<Article>()) } doAnswer { (it.arguments[0] as Article).copy(id = MockData.ID).toMono() }
+
+                on { deleteById(any<String>()) } doReturn monoOfVoid()
             }
         }
 

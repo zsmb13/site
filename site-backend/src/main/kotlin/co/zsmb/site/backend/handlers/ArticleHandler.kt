@@ -70,4 +70,12 @@ class ArticleHandler(private val articleRepository: ArticleRepository) {
         )
     }
 
+    fun removeArticleById(req: ServerRequest): Mono<ServerResponse> {
+        val articleId = req.pathVariable("articleId")
+        return articleRepository.findById(articleId)
+                .delayUntil { articleRepository.deleteById(articleId) }
+                .flatMap { ok().syncBody(it) }
+                .switchIfEmpty(notFound().build())
+    }
+
 }
