@@ -33,7 +33,14 @@ object MockData {
                     content = "This is the third article content which is longer than the summary",
                     id = "16ngfre",
                     publishDate = Date(3562L),
-                    lastModificationDate = Date(25125L))
+                    lastModificationDate = Date(25125L)),
+            Article(title = "Future article",
+                    summary = "whatever",
+                    url = "future-article",
+                    content = "some content",
+                    id = "future",
+                    publishDate = Date(32528044800000L),
+                    lastModificationDate = Date(32528044800000L))
     )
 
     val USERS = listOf(

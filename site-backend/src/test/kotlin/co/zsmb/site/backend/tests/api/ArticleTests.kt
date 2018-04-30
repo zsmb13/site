@@ -85,7 +85,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
 
     @Test
     fun `Create new article without auth`() {
-        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
+        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content", publishDate = Date())
 
         client.post()
                 .uri("/articles")
@@ -97,7 +97,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @Test
     @WithMockUser(roles = ["USER"])
     fun `Create new article as USER`() {
-        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
+        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content", publishDate = Date())
         client.post()
                 .uri("/articles")
                 .syncBody(article)
@@ -108,7 +108,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
     @Test
     @WithMockUser(roles = ["ADMIN"])
     fun `Create new article as ADMIN`() {
-        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content")
+        val article = Article(title = "my title", url = "my-article", summary = "some...", content = "some content", publishDate = Date())
         client.post()
                 .uri("/articles")
                 .syncBody(article)
@@ -140,7 +140,7 @@ class ArticleTests(@Autowired context: ApplicationContext) {
                 .expectBodyAs<Article>().consumeBody { responseArticle ->
                     assertEquals(updatedArticle.content, responseArticle.content)
                     assertEquals(article.id, responseArticle.id)
-                    assertEquals(article.publishDate, responseArticle.publishDate)
+                    assertEquals(updatedArticle.publishDate, responseArticle.publishDate)
                 }
     }
 

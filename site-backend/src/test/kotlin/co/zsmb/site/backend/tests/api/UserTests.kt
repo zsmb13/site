@@ -15,6 +15,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.*
 
 @SpringTest
 class UserTests(@Autowired context: ApplicationContext, @Autowired private val passwordEncoder: PasswordEncoder) {
@@ -113,7 +114,7 @@ class UserTests(@Autowired context: ApplicationContext, @Autowired private val p
     fun `Create user as ADMIN with bad format`() {
         client.post()
                 .uri("/users")
-                .syncBody(Article(title = "foo", url = "foo", summary = "ba...", content = "bar"))
+                .syncBody(Article(title = "foo", url = "foo", summary = "ba...", content = "bar", publishDate = Date()))
                 .exchange()
                 .expectStatus().isBadRequest()
     }

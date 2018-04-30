@@ -7,7 +7,7 @@ data class ArticleSummary(
         val title: String,
         val url: String,
         val summary: String,
-        val publishDate: Long? = null,
+        val publishDate: Long,
         val id: String
 )
 
@@ -15,7 +15,7 @@ data class ArticleSummary(
 data class ArticleDetail(
         val title: String,
         val content: String,
-        val publishDate: Long? = null,
+        val publishDate: Long,
         val lastModificationDate: Long? = null,
         val id: String
 )

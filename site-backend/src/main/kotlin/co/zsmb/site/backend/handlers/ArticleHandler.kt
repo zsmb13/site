@@ -31,7 +31,7 @@ class ArticleHandler(private val articleRepository: ArticleRepository) {
 
     fun createArticle(req: ServerRequest): Mono<ServerResponse> {
         return req.bodyToMono<Article>()
-                .map { it.copy(publishDate = Date(), lastModificationDate = Date()) }
+                .map { it.copy(lastModificationDate = Date()) }
                 .flatMap(articleRepository::insert)
                 .flatMap { article -> created(URI.create("/articles/${article.id}")).syncBody(article) }
                 .withBoom()
@@ -66,8 +66,7 @@ class ArticleHandler(private val articleRepository: ArticleRepository) {
     private fun Article.setPermanentPropertiesFrom(otherArticle: Article): Article {
         return this.copy(
                 id = otherArticle.id,
-                url = otherArticle.url,
-                publishDate = otherArticle.publishDate
+                url = otherArticle.url
         )
     }
 

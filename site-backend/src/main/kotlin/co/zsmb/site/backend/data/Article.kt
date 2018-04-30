@@ -10,6 +10,6 @@ data class Article(
         val url: String,
         val content: String,
         val summary: String,
-        val publishDate: Date? = null,
+        val publishDate: Date,
         val lastModificationDate: Date? = null,
         @Id val id: String? = null)

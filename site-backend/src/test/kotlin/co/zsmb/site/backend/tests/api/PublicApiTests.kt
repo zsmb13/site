@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.*
 
 @SpringTest
 class PublicApiTests(@Autowired context: ApplicationContext) {
@@ -27,6 +28,7 @@ class PublicApiTests(@Autowired context: ApplicationContext) {
         val expectedSummaries = MockData.ARTICLES
                 .sortedByDescending { it.publishDate }
                 .map(Article::toSummary)
+                .filter { it.publishDate <= Date().time }
         client.get()
                 .uri("/public/articlesummaries")
                 .exchange()
@@ -56,6 +58,15 @@ class PublicApiTests(@Autowired context: ApplicationContext) {
     }
 
     @Test
+    fun `Get unpublished article by ID`() {
+        client.get()
+                .uri("/public/articledetails/id/future")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody().isEmpty()
+    }
+
+    @Test
     fun `Get article detail by URL`() {
         val article = MockData.ARTICLES[1]
         val detail = article.let(Article::toDetail)
@@ -65,6 +76,15 @@ class PublicApiTests(@Autowired context: ApplicationContext) {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBodyAs<ArticleDetail>().isEqualWith(detail)
+    }
+
+    @Test
+    fun `Get unpublished article by URL`() {
+        client.get()
+                .uri("/public/articledetails/url/future-article")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody().isEmpty()
     }
 
     @Test
