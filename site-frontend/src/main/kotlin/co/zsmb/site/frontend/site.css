@@ -42,6 +42,14 @@ h2 + h3 {
     margin-top: .5em;
 }
 
+h4 {
+    margin-top: 1em;
+}
+
+h5 {
+    margin-top: 1em;
+}
+
 :not(h1):not(h2) + h3 {
     margin-top: 1em;
 }
