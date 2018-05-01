@@ -1,13 +1,12 @@
 package co.zsmb.site.backend
 
-import co.zsmb.site.backend.handlers.ArticleHandler
-import co.zsmb.site.backend.handlers.CustomPageHandler
-import co.zsmb.site.backend.handlers.MiscHandler
-import co.zsmb.site.backend.handlers.UserHandler
+import co.zsmb.site.backend.handlers.*
 import co.zsmb.site.backend.handlers.pub.PublicArticleHandler
 import co.zsmb.site.backend.handlers.pub.PublicCustomPageHandler
 import org.springframework.context.support.BeanDefinitionDsl
+import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
+import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 
 internal fun BeanDefinitionDsl.routingBeans() {
@@ -17,9 +16,10 @@ internal fun BeanDefinitionDsl.routingBeans() {
             addArticleRoutes(ref())
             addCustomPageRoutes(ref())
             addAuthRoutes(ref())
+            addAnalyticsRoutes(ref())
 
             addPublicRoutes(ref(), ref())
-        }
+        }.addAnalyticsFilter(ref())
     }
 }
 
@@ -57,6 +57,15 @@ private fun RouterFunctionDsl.addAuthRoutes(userHandler: UserHandler) {
     }
 }
 
+private fun RouterFunctionDsl.addAnalyticsRoutes(analyticsHandler: AnalyticsHandler) {
+    "/analytics".nest {
+        GET("/", analyticsHandler::getAllEvents)
+        DELETE("/", analyticsHandler::removeAllEvents)
+
+        GET("/grouped", analyticsHandler::getAllEventsGrouped)
+    }
+}
+
 private fun RouterFunctionDsl.addPublicRoutes(
         publicArticleHandler: PublicArticleHandler,
         publicCustomPageHandler: PublicCustomPageHandler) {
@@ -73,3 +82,5 @@ private fun RouterFunctionDsl.addPublicRoutes(
         }
     }
 }
+
+private fun RouterFunction<ServerResponse>.addAnalyticsFilter(analyticsFilter: AnalyticsFilter) = filter(analyticsFilter)

@@ -1,10 +1,7 @@
 package co.zsmb.site.backend.setup.mocks
 
-import co.zsmb.site.backend.data.Article
-import co.zsmb.site.backend.data.ArticleRepository
-import co.zsmb.site.backend.data.CustomPage
-import co.zsmb.site.backend.data.CustomPageRepository
-import co.zsmb.site.backend.extensions.monoOfVoid
+import co.zsmb.site.backend.data.*
+import co.zsmb.site.backend.extensions.successfulMono
 import co.zsmb.site.backend.security.User
 import co.zsmb.site.backend.security.UserRepository
 import com.nhaarman.mockito_kotlin.any
@@ -42,7 +39,7 @@ fun testBeans() = beans {
 
                 on { insert(any<Article>()) } doAnswer { (it.arguments[0] as Article).copy(id = MockData.ID).toMono() }
 
-                on { deleteById(any<String>()) } doReturn monoOfVoid()
+                on { deleteById(any<String>()) } doReturn successfulMono()
             }
         }
 
@@ -53,7 +50,10 @@ fun testBeans() = beans {
                     MockData.CUSTOM_PAGES.find { it.name == name }?.toMono() ?: Mono.empty()
                 }
 
-                on { deleteByName(any()) } doAnswer { Mono.create { it.success() } }
+                on { deleteByName(any()) } doAnswer {
+                    val create: Mono<Int> = Mono.create { it.success() }
+                    create
+                }
 
                 on { insert(any<CustomPage>()) } doAnswer { (it.arguments[0] as CustomPage).copy(id = MockData.ID).toMono() }
             }
@@ -68,12 +68,12 @@ fun testBeans() = beans {
                     MockData.USERS.find { it.id == userId }?.toMono() ?: Mono.empty()
                 }
 
-                on { findByName(any<String>()) } doAnswer {
+                on { findByName(any()) } doAnswer {
                     val name = it.arguments[0] as String
                     MockData.USERS.find { it.name == name }?.toMono() ?: Mono.empty()
                 }
 
-                on { deleteById(any<String>()) } doAnswer { monoOfVoid() }
+                on { deleteById(any<String>()) } doReturn successfulMono()
 
                 on { insert(any<User>()) } doAnswer {
                     val user = it.arguments[0] as User
@@ -84,6 +84,19 @@ fun testBeans() = beans {
                     val user = it.arguments[0] as User
                     user.toMono()
                 }
+            }
+        }
+
+        bean(isPrimary = true) {
+            mock<AnalyticsEventRepository> {
+                on { insert(any<AnalyticsEvent>()) } doAnswer {
+                    val event = it.arguments[0] as AnalyticsEvent
+                    event.copy(id = MockData.ID).toMono()
+                }
+
+                on { deleteAll() } doReturn successfulMono()
+
+                on { findAll() } doReturn MockData.ANALYTICS_EVENTS.toFlux()
             }
         }
     }

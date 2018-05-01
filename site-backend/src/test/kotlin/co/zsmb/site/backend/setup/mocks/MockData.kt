@@ -1,5 +1,6 @@
 package co.zsmb.site.backend.setup.mocks
 
+import co.zsmb.site.backend.data.AnalyticsEvent
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.CustomPage
 import co.zsmb.site.backend.security.User
@@ -53,6 +54,13 @@ object MockData {
             CustomPage("about", "Content of about page", "asdsa2952"),
             CustomPage("talks", "Content of talks page", "198fdas32"),
             CustomPage("projects", "Content of projects page", "hr8e9h2d8")
+    )
+
+    val ANALYTICS_EVENTS = listOf(
+            AnalyticsEvent(1L, "GET", "/foo", null),
+            AnalyticsEvent(2L, "GET", "/bar", null),
+            AnalyticsEvent(3L, "POST", "/foo", null),
+            AnalyticsEvent(4L, "GET", "/foo", null)
     )
 
 }
