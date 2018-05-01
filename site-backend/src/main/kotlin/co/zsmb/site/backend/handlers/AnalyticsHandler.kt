@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.body
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.toFlux
 
 @Component
 @PreAuthorize("hasRole('ADMIN')")
@@ -19,13 +19,11 @@ class AnalyticsHandler(private val analyticsEventRepository: AnalyticsEventRepos
     }
 
     fun getAllEventsGrouped(req: ServerRequest): Mono<ServerResponse> {
-        val summaries = analyticsEventRepository.findAll()
+        val summaries: Flux<AnalyticsSummary> = analyticsEventRepository.findAll()
                 .map { "${it.method} ${it.path}" }
-                .toIterable()
-                .groupingBy { it }
-                .eachCount()
-                .map { (name, count) -> AnalyticsSummary(name, count) }
-                .toFlux()
+                .collectMultimap { it }
+                .flatMapIterable { it.entries }
+                .map { AnalyticsSummary(it.key, it.value.size) }
 
         return ServerResponse.ok().body(summaries)
     }
