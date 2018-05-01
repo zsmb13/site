@@ -24,6 +24,7 @@ object CodeUtil {
                     if (code.className.contains("kotlin") && textContent != null
                             && textContent.contains("fun main(args: Array<String>)")) {
                         KotlinPlayground(code)
+                        (code.parentNode as HTMLElement).style.paddingTop = "10px"
                     } else {
                         hljs.highlightBlock(code)
                     }
