@@ -34,11 +34,12 @@ class AnalyticsTests @Autowired constructor(context: ApplicationContext) {
                 .groupingBy { "${it.method} ${it.path}" }
                 .eachCount()
                 .map { AnalyticsSummary(it.key, it.value) }
+                .toSet()
         client.get()
                 .uri("/analytics/grouped")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyAs<List<AnalyticsSummary>>().isEqualWith(summaries)
+                .expectBodyAs<Set<AnalyticsSummary>>().isEqualWith(summaries)
     }
 
     @Test
