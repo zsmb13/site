@@ -55,14 +55,10 @@ h5 {
 }
 
 p {
-    margin-bottom: 0;
+    margin-bottom: 8px;
     margin-top: 8px;
 }
 
-p + p {
-    margin-top: 16px;
-}
-
-pre {
-    margin-top: 8px;
+p + pre {
+    margin-top: 0;
 }
