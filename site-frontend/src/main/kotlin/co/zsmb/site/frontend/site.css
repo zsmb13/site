@@ -30,31 +30,6 @@ blockquote p {
     display: inline;
 }
 
-h1 {
-    margin-bottom: .5em;
-    margin-top: 1em;
-}
-
-h2 {
-    margin-top: 1em;
-}
-
-h3 {
-    margin-top: 1em;
-}
-
-h2 + h3 {
-    margin-top: .5em;
-}
-
-h4 {
-    margin-top: 1em;
-}
-
-h5 {
-    margin-top: 1em;
-}
-
 :not(h1):not(h2) + h3 {
     margin-top: 1em;
 }
@@ -66,4 +41,8 @@ p {
 
 p + pre {
     margin-top: 0;
+}
+
+#main-content {
+    margin-top: 1em;
 }
