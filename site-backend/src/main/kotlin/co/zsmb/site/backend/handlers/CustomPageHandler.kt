@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.core.publisher.Mono
 import java.net.URI
@@ -30,5 +31,7 @@ class CustomPageHandler(private val customPageRepository: CustomPageRepository) 
                 }
                 .withBoom()
     }
+
+    fun getAllCustomPages(req: ServerRequest) = ServerResponse.ok().body(customPageRepository.findAll())
 
 }

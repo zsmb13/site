@@ -29,6 +29,7 @@ class CustomPageTests(@Autowired context: ApplicationContext) {
                 .syncBody(customPage)
                 .exchange()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectStatus().isCreated()
                 .expectBodyAs<CommonCustomPage>().isEqualWith(renderedPage)
     }
 
@@ -38,6 +39,26 @@ class CustomPageTests(@Autowired context: ApplicationContext) {
         client.post()
                 .uri("/custompages/profile")
                 .syncBody(customPage)
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody().isEmpty()
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `Get all custom pages as ADMIN`() {
+        client.get()
+                .uri("/custompages")
+                .exchange()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectStatus().isOk()
+                .expectBodyAs<List<CustomPage>>().isEqualWith(MockData.CUSTOM_PAGES)
+    }
+
+    @Test
+    fun `Get all custom pages without auth`() {
+        client.get()
+                .uri("/custompages")
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody().isEmpty()

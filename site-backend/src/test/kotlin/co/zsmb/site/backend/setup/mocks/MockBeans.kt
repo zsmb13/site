@@ -45,6 +45,8 @@ fun testBeans() = beans {
 
         bean(isPrimary = true) {
             mock<CustomPageRepository> {
+                on { findAll() } doReturn MockData.CUSTOM_PAGES.toFlux()
+
                 on { findByName(any()) } doAnswer {
                     val name = it.arguments[0] as String
                     MockData.CUSTOM_PAGES.find { it.name == name }?.toMono() ?: Mono.empty()

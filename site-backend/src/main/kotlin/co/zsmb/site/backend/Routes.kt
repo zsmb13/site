@@ -41,6 +41,7 @@ private fun RouterFunctionDsl.addArticleRoutes(articleHandler: ArticleHandler) {
 }
 
 private fun RouterFunctionDsl.addCustomPageRoutes(customPageHandler: CustomPageHandler) {
+    GET("/custompages", customPageHandler::getAllCustomPages)
     POST("/custompages/{name}", customPageHandler::createOrUpdateCustomPage)
 }
 
