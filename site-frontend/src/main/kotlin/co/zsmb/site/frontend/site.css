@@ -46,3 +46,14 @@ p + pre {
 #main-content {
     margin-top: 1em;
 }
+
+.article-summary {
+    margin-bottom: 1em;
+}
+
+#beta-tag {
+    position: absolute;
+    font-size: 0.45em;
+    transform: rotate(20deg) translateX(-0.5em);
+    color: #007bff;
+}
