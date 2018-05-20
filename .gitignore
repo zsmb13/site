@@ -4,3 +4,4 @@
 .env
 /docs
 /content
+gradle.properties

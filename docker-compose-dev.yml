@@ -5,35 +5,25 @@ services:
     restart: always
     expose:
       - "27017"
-    volumes:
-      - /mongo_data:/data/db
 
   backend:
     image: site_backend
     build:
       context: site-backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
       args:
         JAR_FILE: out/site.jar
     restart: always
     ports:
       - "8080:8080"
-      - "8443:8443"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SSL_PASS=${SSL_PASS}
-      - SSL_ALIAS=${SSL_ALIAS}
-    volumes:
-      - /etc/letsencrypt:/data/ssl
+      - SPRING_PROFILES_ACTIVE=dev
 
   frontend:
     image: site_frontend
     build:
       context: site-frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     restart: always
     ports:
       - "80:80"
-      - "443:443"
-    volumes:
-      - /etc/letsencrypt:/data/ssl

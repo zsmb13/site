@@ -4,5 +4,5 @@ import co.zsmb.koinjs.dsl.module.applicationContext
 
 
 val ApiModule = applicationContext {
-    bean { ApiServiceImpl(get()) as ApiService }
+    bean { ApiServiceImpl(get(), get()) as ApiService }
 }

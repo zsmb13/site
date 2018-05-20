@@ -4,17 +4,18 @@ import co.zsmb.kagu.services.http.HttpService
 import co.zsmb.site.common.ArticleDetail
 import co.zsmb.site.common.ArticleSummary
 import co.zsmb.site.common.CustomPage
+import co.zsmb.site.frontend.config.Config
 import kotlinx.serialization.json.JSON
 import kotlinx.serialization.list
 import kotlinx.serialization.serializer
 
-class ApiServiceImpl(private val httpService: HttpService) : ApiService {
+class ApiServiceImpl(private val httpService: HttpService, private val config: Config) : ApiService {
 
     init {
         httpService.backoffStrategy = HttpService.BackoffStrategy.Exponential
     }
 
-    private val baseUrl = "https://zsmb.co:8443/public"
+    private val baseUrl = config.BACKEND_ADDRESS
 
     override fun getArticleSummaries(callback: (List<ArticleSummary>) -> Unit) {
         httpService.get("$baseUrl/articlesummaries",

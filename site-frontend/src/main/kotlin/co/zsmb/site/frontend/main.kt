@@ -7,6 +7,7 @@ import co.zsmb.site.frontend.components.article.list.ArticleListComponent
 import co.zsmb.site.frontend.components.article.summary.ArticleSummaryComponent
 import co.zsmb.site.frontend.components.loading.LoadingComponent
 import co.zsmb.site.frontend.components.notfound.NotFoundComponent
+import co.zsmb.site.frontend.config.ConfigModule
 import co.zsmb.site.frontend.services.network.ApiModule
 
 
@@ -14,6 +15,7 @@ fun main(args: Array<String>) = application {
 
     modules {
         +ApiModule
+        +ConfigModule
     }
 
     components {

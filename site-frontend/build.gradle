@@ -22,6 +22,18 @@ dependencies {
     compile "co.zsmb:kagu:$kagu_version"
 }
 
+sourceSets {
+    main {
+        kotlin {
+            if (project.hasProperty('devMode') ? devMode.toBoolean() : false) {
+                exclude '**/ProdConfig.kt'
+            } else {
+                exclude '**/DevConfig.kt'
+            }
+        }
+    }
+}
+
 ext.rootPackage = "co.zsmb.site.frontend"
 ext.dceEnabled = true
 
