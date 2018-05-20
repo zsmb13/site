@@ -1,3 +1,7 @@
+html {
+    font-size: 125%
+}
+
 :not(pre) > code {
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -56,4 +60,24 @@ p + pre {
     font-size: 0.45em;
     transform: rotate(20deg) translateX(-0.5em);
     color: #007bff;
+}
+
+h1, h2 {
+    margin-bottom: .5em;
+}
+
+p, h3, h4, h5, h6, pre {
+    margin-bottom: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 1em;
+}
+
+p {
+    line-height: 1.6;
+}
+
+#main-content {
+    margin-bottom: 10em;
 }
