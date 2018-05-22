@@ -1,6 +1,7 @@
 package co.zsmb.site.backend.setup.mocks
 
 import co.zsmb.site.backend.data.AnalyticsEvent
+import co.zsmb.site.backend.data.AnalyticsSummary
 import co.zsmb.site.backend.data.Article
 import co.zsmb.site.backend.data.CustomPage
 import co.zsmb.site.backend.security.User
@@ -57,10 +58,25 @@ object MockData {
     )
 
     val ANALYTICS_EVENTS = listOf(
-            AnalyticsEvent(1L, "GET", "/foo", null),
-            AnalyticsEvent(2L, "GET", "/bar", null),
-            AnalyticsEvent(3L, "POST", "/foo", null),
-            AnalyticsEvent(4L, "GET", "/foo", null)
+            AnalyticsEvent(1526999209000L /* Tue, 22 May 2018 14:26:49 GMT */, "GET", "/foo", null),
+            AnalyticsEvent(1528208809000L /* Tue, 05 Jun 2018 14:26:49 GMT */, "GET", "/bar", null),
+            AnalyticsEvent(1528208809000L /* Tue, 05 Jun 2018 14:26:49 GMT */, "POST", "/foo", null),
+            AnalyticsEvent(1528212409000L /* Tue, 05 Jun 2018 15:26:49 GMT */, "GET", "/foo", null),
+            AnalyticsEvent(1526999209000L /* Tue, 22 May 2018 14:26:49 GMT */, "GET", "/foo", null),
+            AnalyticsEvent(1527604009000L /* Tue, 29 May 2018 14:26:49 GMT */, "GET", "/foo", null)
+    )
+
+    val ANALYTICS_EVENTS_BY_DAY = listOf(
+            AnalyticsSummary("2018-05-22", 2),
+            AnalyticsSummary("2018-05-29", 1),
+            AnalyticsSummary("2018-06-05", 3)
+    )
+
+    val ANALYTICS_EVENTS_BY_HOUR = listOf(
+            AnalyticsSummary("2018-05-22 16", 2),
+            AnalyticsSummary("2018-05-29 16", 1),
+            AnalyticsSummary("2018-06-05 16", 2),
+            AnalyticsSummary("2018-06-05 17", 1)
     )
 
 }
