@@ -28,5 +28,12 @@ fun Node.visitChildrenThat(predicate: (Node) -> Boolean, action: (Node) -> Unit)
 
 fun Element.appendMarkdown(markdown: String?) {
     markdown ?: return
-    this.append(*JQ.parseHTML(markdown))
+    val nodes = JQ.parseHTML(markdown)
+
+    nodes.forEach {
+        when (it) {
+            is Node -> this.appendChild(it)
+            else -> this.appendChild(kotlin.browser.document.createTextNode(it.toString()))
+        }
+    }
 }
